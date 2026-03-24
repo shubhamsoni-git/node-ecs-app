@@ -12,6 +12,9 @@ app.get("/health", (req, res) => {
   res.status(200).send("OK");
 });
 
+app.get("/health-check", (req, res) => {
+  res.status(200).send("OK");
+});
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server running on port ${PORT}`);
 });
