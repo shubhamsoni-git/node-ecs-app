@@ -10,22 +10,21 @@ env:
   ECR_REPOSITORY: node-ecs-app
   ECS_CLUSTER: node-cluster
   ECS_SERVICE: node-service
-  CONTAINER_NAME: node-ecs-app
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v4   # updated ✅
 
-      - name: Configure AWS
-        uses: aws-actions/configure-aws-credentials@v2
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4  # updated ✅
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          region: ${{ env.AWS_REGION }}
+          aws-region: ${{ env.AWS_REGION }}   # FIXED ✅
 
       - name: Login to ECR
         run: |
@@ -33,15 +32,15 @@ jobs:
           | docker login --username AWS --password-stdin \
           ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.$AWS_REGION.amazonaws.com
 
-      - name: Build Image
+      - name: Build Docker image
         run: docker build -t $ECR_REPOSITORY .
 
-      - name: Tag Image
+      - name: Tag image
         run: |
           docker tag $ECR_REPOSITORY:latest \
           ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY:latest
 
-      - name: Push Image
+      - name: Push to ECR
         run: |
           docker push \
           ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY:latest
