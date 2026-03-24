@@ -9,7 +9,7 @@ env:
   AWS_REGION: ap-south-1
   ECR_REPOSITORY: node-ecs-app
   ECS_CLUSTER: node-cluster
-  ECS_SERVICE: node-service
+  ECS_SERVICE: node-ecs-task-service-i162pcy0
 
 jobs:
   deploy:
